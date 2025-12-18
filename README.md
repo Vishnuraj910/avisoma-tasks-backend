@@ -9,6 +9,7 @@ A TypeScript Express API service for managing tasks with PostgreSQL database.
 - Health check endpoint
 - Comprehensive test coverage
 - Docker support with docker-compose
+- Updated at value is updated via DB trigger
 
 ## Prerequisites
 
@@ -22,6 +23,8 @@ A TypeScript Express API service for managing tasks with PostgreSQL database.
 1. Install dependencies:
 ```bash
 npm install
+# or
+bun install
 ```
 
 2. Create a `.env` file:
@@ -51,6 +54,8 @@ psql -h localhost -U postgres -d avisoma_db -f db/schema.sql
 5. Run the development server:
 ```bash
 npm run dev
+# or
+bun dev
 ```
 
 ## Docker Deployment
@@ -155,6 +160,8 @@ Authorization: your-api-key
 Run tests:
 ```bash
 npm test
+# or
+bun test
 ```
 
 Run tests in watch mode:
