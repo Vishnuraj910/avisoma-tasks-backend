@@ -28,7 +28,7 @@ npm install
 ```env
 NODE_ENV=development
 PORT=3000
-DB_URL=postgresql://postgres:postgres@localhost:5432/tasks_db
+DB_URL=postgresql://postgres:postgres@localhost:5432/avisoma_db
 ```
 
 3. Start PostgreSQL (using Docker):
@@ -37,14 +37,14 @@ docker run -d \
   --name tasks-postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=tasks_db \
+  -e POSTGRES_DB=avisoma_db \
   -p 5432:5432 \
   postgres:16-alpine
 ```
 
 4. Initialize the database schema:
 ```bash
-psql -h localhost -U postgres -d tasks_db -f db/schema.sql
+psql -h localhost -U postgres -d avisoma_db -f db/schema.sql
 ```
 
 5. Run the development server:
@@ -62,7 +62,7 @@ NODE_ENV=production
 PORT=3000
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-POSTGRES_DB=tasks_db
+POSTGRES_DB=avisoma_db
 POSTGRES_PORT=5432
 ```
 
@@ -99,7 +99,7 @@ docker run -d \
   --name tasks-postgres \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=tasks_db \
+  -e POSTGRES_DB=avisoma_db \
   -p 5432:5432 \
   -v $(pwd)/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql \
   postgres:16-alpine
@@ -110,7 +110,7 @@ docker run -d \
 docker run -d \
   --name tasks-backend \
   --link tasks-postgres:postgres \
-  -e DB_URL=postgresql://postgres:postgres@postgres:5432/tasks_db \
+  -e DB_URL=postgresql://postgres:postgres@postgres:5432/avisoma_db \
   -p 3000:3000 \
   tasks-backend
 ```
@@ -153,7 +153,7 @@ npm run test:coverage
 - `DB_URL` - PostgreSQL connection string
 - `POSTGRES_USER` - PostgreSQL username (default: postgres)
 - `POSTGRES_PASSWORD` - PostgreSQL password (default: postgres)
-- `POSTGRES_DB` - PostgreSQL database name (default: tasks_db)
+- `POSTGRES_DB` - PostgreSQL database name (default: avisoma_db)
 - `POSTGRES_PORT` - PostgreSQL port (default: 5432)
 
 ## Project Structure
