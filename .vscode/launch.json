@@ -5,7 +5,7 @@
       "name": "Debug Tasks API (npm dev)",
       "type": "pwa-node",
       "request": "launch",
-      "runtimeExecutable": "npm",
+      "runtimeExecutable": "bun",
       "runtimeArgs": ["run", "dev"],
       "cwd": "${workspaceFolder}",
       "envFile": "${workspaceFolder}/.env",
