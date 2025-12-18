@@ -29,6 +29,7 @@ npm install
 NODE_ENV=development
 PORT=3000
 DB_URL=postgresql://postgres:postgres@localhost:5432/avisoma_db
+API_KEY=your-secret-api-key-here
 ```
 
 3. Start PostgreSQL (using Docker):
@@ -64,6 +65,7 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=avisoma_db
 POSTGRES_PORT=5432
+API_KEY=your-secret-api-key-here
 ```
 
 2. Build and start services:
@@ -117,17 +119,36 @@ docker run -d \
 
 ## API Endpoints
 
+### Authentication
+
+All API endpoints (except `/health`) require authentication via API key. Include the API key in the `Authorization` header:
+
+```
+Authorization: Bearer your-api-key
+```
+
+or
+
+```
+Authorization: your-api-key
+```
+
 ### Health Check
-- `GET /health` - Check API and database health
+- `GET /health` - Check API and database health (no authentication required)
 
 ### Tasks
 - `POST /api/tasks` - Create a new task
   - Body: `{ "title": "string", "description": "string" (optional) }`
+  - Requires: API key in Authorization header
 - `GET /api/tasks` - Get all tasks
+  - Requires: API key in Authorization header
 - `GET /api/tasks/:id` - Get a single task
+  - Requires: API key in Authorization header
 - `PATCH /api/tasks/:id` - Update task status
   - Body: `{ "status": "pending" | "in-progress" | "completed" }`
+  - Requires: API key in Authorization header
 - `DELETE /api/tasks/:id` - Soft delete a task
+  - Requires: API key in Authorization header
 
 ## Testing
 
@@ -155,6 +176,7 @@ npm run test:coverage
 - `POSTGRES_PASSWORD` - PostgreSQL password (default: postgres)
 - `POSTGRES_DB` - PostgreSQL database name (default: avisoma_db)
 - `POSTGRES_PORT` - PostgreSQL port (default: 5432)
+- `API_KEY` - API key for authentication (required for all endpoints except `/health`)
 
 ## Project Structure
 
@@ -163,6 +185,8 @@ tasks-backend/
 ├── src/
 │   ├── app.ts              # Express app configuration
 │   ├── server.ts           # Server entry point
+│   ├── middleware/
+│   │   └── auth.ts         # Authentication middleware
 │   ├── routes/
 │   │   └── tasks.ts        # Task routes
 │   ├── models/
