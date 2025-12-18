@@ -12,6 +12,10 @@ jest.mock('../utils/db', () => ({
   },
 }));
 
+// Set API key for tests
+const TEST_API_KEY = 'test-api-key-12345';
+process.env.API_KEY = TEST_API_KEY;
+
 describe('Tasks API Routes', () => {
   const mockTask = {
     id: '1',
@@ -34,6 +38,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .post('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           title: 'Test Task',
           description: 'Test Description',
@@ -61,6 +66,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .post('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           title: 'Test Task',
         });
@@ -77,6 +83,7 @@ describe('Tasks API Routes', () => {
     it('should return 400 when title is missing', async () => {
       const response = await request(app)
         .post('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           description: 'Test Description',
         });
@@ -90,6 +97,7 @@ describe('Tasks API Routes', () => {
     it('should return 400 when title is empty string', async () => {
       const response = await request(app)
         .post('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           title: '',
         });
@@ -102,6 +110,7 @@ describe('Tasks API Routes', () => {
     it('should return 400 when body is empty', async () => {
       const response = await request(app)
         .post('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({});
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
@@ -114,6 +123,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .post('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           title: 'Test Task',
         });
@@ -133,7 +143,9 @@ describe('Tasks API Routes', () => {
         rows: mockTasks,
       });
 
-      const response = await request(app).get('/api/tasks');
+      const response = await request(app)
+        .get('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body).toHaveProperty('success', true);
@@ -149,7 +161,9 @@ describe('Tasks API Routes', () => {
         rows: [],
       });
 
-      const response = await request(app).get('/api/tasks');
+      const response = await request(app)
+        .get('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body).toHaveProperty('success', true);
@@ -159,7 +173,9 @@ describe('Tasks API Routes', () => {
     it('should handle database errors', async () => {
       (query as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-      const response = await request(app).get('/api/tasks');
+      const response = await request(app)
+        .get('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(response.body).toHaveProperty('error');
@@ -172,7 +188,9 @@ describe('Tasks API Routes', () => {
         rows: [mockTask],
       });
 
-      const response = await request(app).get('/api/tasks/1');
+      const response = await request(app)
+        .get('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body).toHaveProperty('success', true);
@@ -188,7 +206,9 @@ describe('Tasks API Routes', () => {
         rows: [],
       });
 
-      const response = await request(app).get('/api/tasks/999');
+      const response = await request(app)
+        .get('/api/tasks/999')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.NOT_FOUND);
       expect(response.body).toHaveProperty('success', false);
@@ -196,7 +216,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is not a valid integer', async () => {
-      const response = await request(app).get('/api/tasks/abc');
+      const response = await request(app)
+        .get('/api/tasks/abc')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -204,7 +226,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is zero', async () => {
-      const response = await request(app).get('/api/tasks/0');
+      const response = await request(app)
+        .get('/api/tasks/0')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -212,7 +236,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is negative', async () => {
-      const response = await request(app).get('/api/tasks/-1');
+      const response = await request(app)
+        .get('/api/tasks/-1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -220,7 +246,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is a float', async () => {
-      const response = await request(app).get('/api/tasks/1.5');
+      const response = await request(app)
+        .get('/api/tasks/1.5')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -230,7 +258,9 @@ describe('Tasks API Routes', () => {
     it('should handle database errors', async () => {
       (query as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-      const response = await request(app).get('/api/tasks/1');
+      const response = await request(app)
+        .get('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(response.body).toHaveProperty('error');
@@ -246,6 +276,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .patch('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: TaskStatusEnum.IN_PROGRESS,
         });
@@ -267,6 +298,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .patch('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: TaskStatusEnum.COMPLETED,
         });
@@ -284,6 +316,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .patch('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: TaskStatusEnum.PENDING,
         });
@@ -300,6 +333,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .patch('/api/tasks/999')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: TaskStatusEnum.IN_PROGRESS,
         });
@@ -312,6 +346,7 @@ describe('Tasks API Routes', () => {
     it('should return 400 when id is not a valid integer', async () => {
       const response = await request(app)
         .patch('/api/tasks/abc')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: TaskStatusEnum.IN_PROGRESS,
         });
@@ -324,6 +359,7 @@ describe('Tasks API Routes', () => {
     it('should return 400 when status is missing', async () => {
       const response = await request(app)
         .patch('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({});
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
@@ -336,6 +372,7 @@ describe('Tasks API Routes', () => {
     it('should return 400 when status is invalid', async () => {
       const response = await request(app)
         .patch('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: 'invalid-status',
         });
@@ -352,6 +389,7 @@ describe('Tasks API Routes', () => {
 
       const response = await request(app)
         .patch('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`)
         .send({
           status: TaskStatusEnum.IN_PROGRESS,
         });
@@ -367,7 +405,9 @@ describe('Tasks API Routes', () => {
         rows: [mockTask],
       });
 
-      const response = await request(app).delete('/api/tasks/1');
+      const response = await request(app)
+        .delete('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body).toHaveProperty('success', true);
@@ -383,7 +423,9 @@ describe('Tasks API Routes', () => {
         rows: [],
       });
 
-      const response = await request(app).delete('/api/tasks/999');
+      const response = await request(app)
+        .delete('/api/tasks/999')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.NOT_FOUND);
       expect(response.body).toHaveProperty('success', false);
@@ -391,7 +433,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is not a valid integer', async () => {
-      const response = await request(app).delete('/api/tasks/abc');
+      const response = await request(app)
+        .delete('/api/tasks/abc')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -399,7 +443,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is zero', async () => {
-      const response = await request(app).delete('/api/tasks/0');
+      const response = await request(app)
+        .delete('/api/tasks/0')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -407,7 +453,9 @@ describe('Tasks API Routes', () => {
     });
 
     it('should return 400 when id is negative', async () => {
-      const response = await request(app).delete('/api/tasks/-1');
+      const response = await request(app)
+        .delete('/api/tasks/-1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.BAD_REQUEST);
       expect(response.body).toHaveProperty('error', 'Invalid id');
@@ -417,7 +465,9 @@ describe('Tasks API Routes', () => {
     it('should handle database errors', async () => {
       (query as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-      const response = await request(app).delete('/api/tasks/1');
+      const response = await request(app)
+        .delete('/api/tasks/1')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(response.body).toHaveProperty('error');
@@ -426,10 +476,56 @@ describe('Tasks API Routes', () => {
 
   describe('404 Handler', () => {
     it('should return 404 for non-existent routes', async () => {
-      const response = await request(app).get('/api/nonexistent');
+      const response = await request(app)
+        .get('/api/nonexistent')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
 
       expect(response.status).toBe(StatusCodes.NOT_FOUND);
       expect(response.body).toHaveProperty('error', 'Not found');
+    });
+  });
+
+  describe('Authentication', () => {
+    it('should return 401 when Authorization header is missing', async () => {
+      const response = await request(app).get('/api/tasks');
+
+      expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
+      expect(response.body).toHaveProperty('error', 'Authorization header is required');
+    });
+
+    it('should return 401 when API key is invalid', async () => {
+      const response = await request(app)
+        .get('/api/tasks')
+        .set('Authorization', 'Bearer invalid-key');
+
+      expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
+      expect(response.body).toHaveProperty('error', 'Invalid API key');
+    });
+
+    it('should accept API key without Bearer prefix', async () => {
+      (query as jest.Mock).mockResolvedValue({
+        rows: [],
+      });
+
+      const response = await request(app)
+        .get('/api/tasks')
+        .set('Authorization', TEST_API_KEY);
+
+      expect(response.status).toBe(StatusCodes.OK);
+      expect(response.body).toHaveProperty('success', true);
+    });
+
+    it('should accept API key with Bearer prefix', async () => {
+      (query as jest.Mock).mockResolvedValue({
+        rows: [],
+      });
+
+      const response = await request(app)
+        .get('/api/tasks')
+        .set('Authorization', `Bearer ${TEST_API_KEY}`);
+
+      expect(response.status).toBe(StatusCodes.OK);
+      expect(response.body).toHaveProperty('success', true);
     });
   });
 });
