@@ -57,6 +57,36 @@
 			"response": []
 		},
 		{
+			"name": "Task by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "c4f8a9e2-7b3d-4e6a-9f1c-8d2e5b6a1f0d",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/api/tasks/3",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"api",
+						"tasks",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Add Tasks",
 			"request": {
 				"method": "POST",
@@ -134,37 +164,7 @@
 			"response": []
 		},
 		{
-			"name": "All Tasks by ID",
-			"request": {
-				"method": "GET",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"type": "text"
-					},
-					{
-						"key": "Authorization",
-						"value": "c4f8a9e2-7b3d-4e6a-9f1c-8d2e5b6a1f0d",
-						"type": "text"
-					}
-				],
-				"url": {
-					"raw": "{{baseURL}}/api/tasks/3",
-					"host": [
-						"{{baseURL}}"
-					],
-					"path": [
-						"api",
-						"tasks",
-						"3"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "All Tasks by ID Copy",
+			"name": "Remove Task",
 			"request": {
 				"method": "DELETE",
 				"header": [
