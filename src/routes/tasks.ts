@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { z } from "zod";
+import { success, z } from "zod";
 import { query } from "../utils/db";
 import { Task } from "../models/tasks";
 import { TaskStatusEnum, ZodErrorEnum } from "../models/enums";
@@ -32,7 +32,9 @@ router.post("/", async (req, res, next) => {
       [body.title, body.description ?? null]
     );
 
-    res.status(StatusCodes.CREATED).json(result.rows[0]);
+    res
+      .status(StatusCodes.CREATED)
+      .json({ status: true, data: result.rows[0] });
   } catch (err: any) {
     if (err?.name === ZodErrorEnum.ZOD_ERROR) {
       return res
@@ -52,7 +54,7 @@ router.get("/", async (_req, res, next) => {
        WHERE is_deleted = FALSE
        ORDER BY created_at DESC`
     );
-    res.json(result.rows);
+    res.json({ success: true, data: result.rows });
   } catch (err) {
     next(err);
   }
@@ -76,10 +78,10 @@ router.get("/:id", async (req, res, next) => {
     if (result.rows.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: ZodErrorEnum.TASK_NOT_FOUND });
+        .json({ success: false, error: ZodErrorEnum.TASK_NOT_FOUND });
     }
 
-    res.json(result.rows[0]);
+    res.json({ success: true, data: result.rows[0] });
   } catch (err) {
     next(err);
   }
@@ -106,15 +108,17 @@ router.patch("/:id", async (req, res, next) => {
     if (result.rows.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: ZodErrorEnum.TASK_NOT_FOUND });
+        .json({ success: false, error: ZodErrorEnum.TASK_NOT_FOUND });
     }
 
-    res.json(result.rows[0]);
+    res.json({ success: true, data: result.rows[0] });
   } catch (err: any) {
     if (err?.name === ZodErrorEnum.ZOD_ERROR) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: ZodErrorEnum.VALIDATION_ERROR, details: err.issues });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        error: ZodErrorEnum.VALIDATION_ERROR,
+        details: err.issues,
+      });
     }
     next(err);
   }
@@ -139,15 +143,17 @@ router.delete("/:id", async (req, res, next) => {
     if (result.rows.length === 0) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ error: ZodErrorEnum.TASK_NOT_FOUND });
+        .json({ success: false, error: ZodErrorEnum.TASK_NOT_FOUND });
     }
 
-    res.json(result.rows[0]);
+    res.json({ success: true, data: result.rows[0] });
   } catch (err: any) {
     if (err?.name === ZodErrorEnum.ZOD_ERROR) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: ZodErrorEnum.VALIDATION_ERROR, details: err.issues });
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        error: ZodErrorEnum.VALIDATION_ERROR,
+        details: err.issues,
+      });
     }
     next(err);
   }
