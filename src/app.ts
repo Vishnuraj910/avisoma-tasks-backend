@@ -5,6 +5,7 @@ import morgan from "morgan";
 import tasksRouter from "./routes/tasks";
 import { pool } from "./utils/db";
 import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+import { authenticateApiKey } from "./middleware/auth";
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.get("/health", async (_req, res) => {
     });
   }
 });
+
+app.use(authenticateApiKey);
 
 app.use("/api/tasks", tasksRouter);
 
