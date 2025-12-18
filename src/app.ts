@@ -6,6 +6,7 @@ import tasksRouter from "./routes/tasks";
 import { pool } from "./utils/db";
 import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
 import { authenticateApiKey } from "./middleware/auth";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.get("/health", async (_req, res) => {
 });
 
 app.use(authenticateApiKey);
+app.use(cookieParser());
 
 app.use("/api/tasks", tasksRouter);
 
