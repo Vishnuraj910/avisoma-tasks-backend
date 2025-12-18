@@ -48,6 +48,7 @@ router.post("/", async (req, res, next) => {
 // GET /api/tasks - Get all tasks
 router.get("/", async (_req, res, next) => {
   try {
+    // console.log(_req.cookies); // Example of accessing cookies if case to be used for translation
     const result = await query<Task>(
       `SELECT id, title, description, status, created_at, updated_at
        FROM tasks
