@@ -2,11 +2,11 @@ import express from "express";
 import helmet from "helmet";
 import cors from "cors";
 import morgan from "morgan";
-import tasksRouter from "./routes/tasks";
-import { pool } from "./utils/db";
-import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
-import { authenticateApiKey } from "./middleware/auth";
+import tasksRouter from "./routes/tasks.route.js";
+import { pool } from "./utils/db.js";
+import { authenticateApiKey } from "./middleware/auth.js";
 import cookieParser from "cookie-parser";
+import { StatusCodes } from "http-status-codes";
 
 const app = express();
 

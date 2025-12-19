@@ -5,7 +5,7 @@ import {
   getTaskByIdController,
   getTasksController,
   updateTaskStatusController,
-} from "../controllers/tasks.controller";
+} from "../controllers/tasks.controller.js";
 
 const router = Router();
 
