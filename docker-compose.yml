@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   postgres:
@@ -7,7 +7,8 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-tasks_db}
+      # Default DB name aligned with README and DB_URL
+      POSTGRES_DB: ${POSTGRES_DB:-avisoma_db}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -29,7 +30,9 @@ services:
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${PORT:-3000}
-      DB_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-tasks_db}
+      DB_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-avisoma_db}
+      # API key required by auth middleware
+      API_KEY: ${API_KEY:-c4f8a9e2-7b3d-4e6a-9f1c-8d2e5b6a1f0d}
     ports:
       - "${PORT:-3000}:3000"
     depends_on:
@@ -45,4 +48,3 @@ volumes:
 networks:
   tasks-network:
     driver: bridge
-

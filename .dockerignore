@@ -19,6 +19,5 @@ __tests__
 *.test.ts
 *.test.js
 jest.config.js
-tsconfig.json
 README.md
 
