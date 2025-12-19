@@ -1,14 +1,14 @@
 import z from "zod";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { TaskStatusEnum, ZodErrorEnum } from "../models/enums";
+import { TaskStatusEnum, ZodErrorEnum } from "../models/enums.js";
 import {
   createTaskService,
   getTasksService,
   getTaskByIdService,
   updateTaskStatusService,
   softDeleteTaskService,
-} from "../services/tasks.service";
+} from "../services/tasks.prisma.service.js";
 
 const CreateTaskSchema = z.object({
   title: z.string().min(1),

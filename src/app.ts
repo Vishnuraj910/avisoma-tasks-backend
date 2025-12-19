@@ -15,6 +15,18 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
+app.use((req, res, next) => {
+  // Handle BigInt serialization for Prisma
+  res.json = function (body: any) {
+    const serializedBody = JSON.stringify(body, (key, value) =>
+      typeof value === "bigint" ? value.toString() : value
+    );
+    res.setHeader("Content-Type", "application/json");
+    return res.send(serializedBody);
+  };
+  next();
+});
+
 app.get("/health", async (_req, res) => {
   try {
     await pool.query("SELECT 1"); // Check DB Connection
