@@ -32,8 +32,8 @@ export async function createTaskController(
     const body = CreateTaskSchema.parse(req.body);
     const task = await createTaskService(body);
     res.status(StatusCodes.CREATED).json({ status: true, data: task });
-  } catch (err: any) {
-    if (err?.name === ZodErrorEnum.ZOD_ERROR) {
+  } catch (err) {
+    if (err instanceof z.ZodError) {
       return res
         .status(StatusCodes.BAD_REQUEST)
         .json({ error: ZodErrorEnum.VALIDATION_ERROR, details: err.issues });
@@ -101,8 +101,8 @@ export async function updateTaskStatusController(
     }
 
     res.json({ success: true, data: task });
-  } catch (err: any) {
-    if (err?.name === ZodErrorEnum.ZOD_ERROR) {
+  } catch (err) {
+    if (err instanceof z.ZodError) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         error: ZodErrorEnum.VALIDATION_ERROR,
@@ -133,8 +133,8 @@ export async function deleteTaskController(
     }
 
     res.json({ success: true, data: task });
-  } catch (err: any) {
-    if (err?.name === ZodErrorEnum.ZOD_ERROR) {
+  } catch (err) {
+    if (err instanceof z.ZodError) {
       return res.status(StatusCodes.BAD_REQUEST).json({
         success: false,
         error: ZodErrorEnum.VALIDATION_ERROR,
