@@ -5,7 +5,6 @@ export const pool = new Pool({
 });
 
 pool.on("error", (err) => {
-  // eslint-disable-next-line no-console
   console.error("Unexpected PG client error", err);
   process.exit(1);
 });
