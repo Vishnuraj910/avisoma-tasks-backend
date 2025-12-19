@@ -2,6 +2,13 @@
 
 A TypeScript Express API service for managing tasks with PostgreSQL database.
 
+Frontend Application available [here](https://github.com/Vishnuraj910/avisoma-tasks-frontend)
+POSTMAN Collection is available [here](https://github.com/Vishnuraj910/avisoma-tasks-backend/tree/b8cca9e69fe26dabf8a2be12c3e52ad84d00166b/postman)
+
+## Screenshots
+<img width="977" height="856" alt="Screenshot 2025-12-19 at 5 26 02 PM" src="https://github.com/user-attachments/assets/d8a17b45-9878-46b0-ad6f-c9e50ff5081d" />
+<img width="977" height="856" alt="Screenshot 2025-12-19 at 5 41 49 PM" src="https://github.com/user-attachments/assets/3caf106c-d4ac-451a-a7c3-86340c507ea5" />
+
 ## Features
 
 - RESTful API for task management
