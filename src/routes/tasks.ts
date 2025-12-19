@@ -4,6 +4,7 @@ import { query } from "../utils/db";
 import { Task } from "../models/tasks";
 import { TaskStatusEnum, ZodErrorEnum } from "../models/enums";
 import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+import taskController from "../controllers/tasks.controller";
 
 const router = Router();
 
@@ -21,45 +22,10 @@ const UpdateStatusSchema = z.object({
 });
 
 // POST /api/tasks - Create a new task
-router.post("/", async (req, res, next) => {
-  try {
-    const body = CreateTaskSchema.parse(req.body);
-
-    const result = await query<Task>(
-      `INSERT INTO tasks (title, description)
-       VALUES ($1, $2)
-       RETURNING id, title, description, status, created_at, updated_at`,
-      [body.title, body.description ?? null]
-    );
-
-    res
-      .status(StatusCodes.CREATED)
-      .json({ status: true, data: result.rows[0] });
-  } catch (err: any) {
-    if (err?.name === ZodErrorEnum.ZOD_ERROR) {
-      return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json({ error: ZodErrorEnum.VALIDATION_ERROR, details: err.issues });
-    }
-    next(err);
-  }
-});
+router.post("/", taskController.createTasksController);
 
 // GET /api/tasks - Get all tasks
-router.get("/", async (_req, res, next) => {
-  try {
-    // console.log(_req.cookies); // Example of accessing cookies if case to be used for translation
-    const result = await query<Task>(
-      `SELECT id, title, description, status, created_at, updated_at
-       FROM tasks
-       WHERE is_deleted = FALSE
-       ORDER BY created_at DESC`
-    );
-    res.json({ success: true, data: result.rows });
-  } catch (err) {
-    next(err);
-  }
-});
+router.get("/", taskController.getTasksController);
 
 // GET /api/tasks/:id - Get single task
 router.get("/:id", async (req, res, next) => {
