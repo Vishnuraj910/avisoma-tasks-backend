@@ -169,7 +169,7 @@ Authorization: your-api-key
 - `GET /api/tasks/:id` - Get a single task (returns 404 if soft-deleted)
   - Requires: API key in Authorization header
 - `PATCH /api/tasks/:id` - Update task status
-  - Body: `{ "status": "pending" | "in-progress" | "completed" }`
+  - Body: `{ "status": "pending" | "in_progress" | "completed" }`
   - Requires: API key in Authorization header
 - `DELETE /api/tasks/:id` - Soft delete a task
   - Requires: API key in Authorization header

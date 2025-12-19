@@ -15,7 +15,7 @@ datasource db {
 
 enum TaskStatus {
   pending
-  in_progress @map("in-progress")
+  in_progress
   completed
 
   @@map("task_status")

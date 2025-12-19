@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     title TEXT NOT NULL,
     description TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (
-        status IN ('pending', 'in-progress', 'completed')
+        status IN ('pending', 'in_progress', 'completed')
     ),
     is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
