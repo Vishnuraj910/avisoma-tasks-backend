@@ -7,6 +7,8 @@ import { pool } from "./utils/db.js";
 import { authenticateApiKey } from "./middleware/auth.js";
 import cookieParser from "cookie-parser";
 import { StatusCodes } from "http-status-codes";
+import { ResponseInterface, ExpressError } from "./models/tasks.model.js";
+import { Task } from "./generated/prisma/client.js";
 
 const app = express();
 
@@ -17,7 +19,7 @@ app.use(morgan("dev"));
 
 app.use((req, res, next) => {
   // Handle BigInt serialization for Prisma
-  res.json = function (body: any) {
+  res.json = function (body: ResponseInterface<Task[] | Task | null>) {
     const serializedBody = JSON.stringify(body, (key, value) =>
       typeof value === "bigint" ? value.toString() : value
     );
@@ -59,7 +61,7 @@ app.use((_req, res) => {
 
 app.use(
   (
-    err: any,
+    err: ExpressError,
     _req: express.Request,
     res: express.Response,
     _next: express.NextFunction

@@ -13,3 +13,15 @@ export interface Task {
   created_at: string;
   updated_at: string;
 }
+
+export interface ResponseInterface<T> {
+  data: T;
+  message?: string;
+  success: boolean;
+  error?: string;
+}
+
+export interface ExpressError extends Error {
+  status?: number;
+  statusCode?: number;
+}
