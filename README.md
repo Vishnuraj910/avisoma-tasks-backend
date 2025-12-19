@@ -10,6 +10,8 @@ A TypeScript Express API service for managing tasks with PostgreSQL database.
 - Comprehensive test coverage
 - Docker support with docker-compose
 - Updated at value is updated via DB trigger
+- Prisma ORM for database interactions (default)
+- Option to switch to native PostgreSQL driver (`pg`)
 
 ## Prerequisites
 
@@ -51,7 +53,12 @@ docker run -d \
 psql -h localhost -U postgres -d avisoma_db -f db/schema.sql
 ```
 
-5. Run the development server:
+5. Generate Prisma Client:
+```bash
+npx prisma generate
+```
+
+6. Run the development server:
 ```bash
 npm run dev
 # or
@@ -224,3 +231,33 @@ tasks-backend/
 ├── docker-compose.yml      # Docker Compose configuration
 └── package.json
 ```
+
+## Database & ORM
+
+This project uses **Prisma** as the default ORM. The schema is defined in `prisma/schema.prisma`.
+
+### Switching to Native PostgreSQL Driver (pg)
+
+The project also includes a native `pg` driver implementation for tasks services. If you prefer to use the native driver instead of Prisma, follow these steps:
+
+1.  Open `src/controllers/tasks.controller.ts`.
+2.  Locate the import statement for task services (around line 5).
+3.  Change the import path from `../services/tasks.prisma.service.js` to `../services/tasks.service.js`.
+
+**Current (Prisma):**
+```typescript
+import {
+  createTaskService,
+  // ...
+} from "../services/tasks.prisma.service.js";
+```
+
+**Switch to Native pg:**
+```typescript
+import {
+  createTaskService,
+  // ...
+} from "../services/tasks.service.js";
+```
+
+The service interfaces are identical, so no other code changes are required.
