@@ -1,6 +1,6 @@
-import { Task } from "../models/tasks";
-import { TaskStatusEnum } from "../models/enums";
-import { query } from "../utils/db";
+import { Task } from "../models/tasks.model.js";
+import { TaskStatusEnum } from "../models/enums.js";
+import { query } from "../utils/db.js";
 
 export async function createTaskService(data: {
   title: string;
@@ -49,9 +49,7 @@ export async function updateTaskStatusService(
   return result.rows[0] ?? null;
 }
 
-export async function softDeleteTaskService(
-  id: number
-): Promise<Task | null> {
+export async function softDeleteTaskService(id: number): Promise<Task | null> {
   const result = await query<Task>(
     `UPDATE tasks
        SET is_deleted = TRUE

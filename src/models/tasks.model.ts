@@ -1,4 +1,4 @@
-import { TaskStatusEnum } from "./enums";
+import { TaskStatusEnum } from "./enums.js";
 
 export type TaskStatus =
   | TaskStatusEnum.PENDING
