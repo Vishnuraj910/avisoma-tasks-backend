@@ -1,8 +1,14 @@
 import z from "zod";
-import { TaskStatusEnum, ZodErrorEnum } from "../models/enums";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import getTasksService from "../services/tasks.service";
+import { TaskStatusEnum, ZodErrorEnum } from "../models/enums";
+import {
+  createTaskService,
+  getTasksService,
+  getTaskByIdService,
+  updateTaskStatusService,
+  softDeleteTaskService,
+} from "../services/tasks.service";
 
 const CreateTaskSchema = z.object({
   title: z.string().min(1),
@@ -17,18 +23,15 @@ const UpdateStatusSchema = z.object({
   ]),
 });
 
-async function createTasksController(
+export async function createTaskController(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     const body = CreateTaskSchema.parse(req.body);
-
-    const result = await getTasksService.createTasksService(body);
-    res
-      .status(StatusCodes.CREATED)
-      .json({ status: true, data: result.rows[0] });
+    const task = await createTaskService(body);
+    res.status(StatusCodes.CREATED).json({ status: true, data: task });
   } catch (err: any) {
     if (err?.name === ZodErrorEnum.ZOD_ERROR) {
       return res
@@ -39,21 +42,105 @@ async function createTasksController(
   }
 }
 
-async function getTasksController(
+export async function getTasksController(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     // console.log(req.cookies); // Example of accessing cookies if case to be used for translation
-    const result = await getTasksService.getTasksService();
-    res.json({ success: true, data: result.rows });
+    const tasks = await getTasksService();
+    res.json({ success: true, data: tasks });
   } catch (err) {
     next(err);
   }
 }
 
-export default {
-  createTasksController,
-  getTasksController,
-};
+export async function getTaskByIdController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid id" });
+    }
+
+    const task = await getTaskByIdService(id);
+    if (!task) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ success: false, error: ZodErrorEnum.TASK_NOT_FOUND });
+    }
+
+    res.json({ success: true, data: task });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateTaskStatusController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid id" });
+    }
+
+    const body = UpdateStatusSchema.parse(req.body);
+    const task = await updateTaskStatusService(id, body.status);
+
+    if (!task) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ success: false, error: ZodErrorEnum.TASK_NOT_FOUND });
+    }
+
+    res.json({ success: true, data: task });
+  } catch (err: any) {
+    if (err?.name === ZodErrorEnum.ZOD_ERROR) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        error: ZodErrorEnum.VALIDATION_ERROR,
+        details: err.issues,
+      });
+    }
+    next(err);
+  }
+}
+
+export async function deleteTaskController(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id <= 0) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ error: "Invalid id" });
+    }
+
+    const task = await softDeleteTaskService(id);
+
+    if (!task) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ success: false, error: ZodErrorEnum.TASK_NOT_FOUND });
+    }
+
+    res.json({ success: true, data: task });
+  } catch (err: any) {
+    if (err?.name === ZodErrorEnum.ZOD_ERROR) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        error: ZodErrorEnum.VALIDATION_ERROR,
+        details: err.issues,
+      });
+    }
+    next(err);
+  }
+}
