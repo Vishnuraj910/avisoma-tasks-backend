@@ -216,28 +216,37 @@ npm run test:coverage
 
 ```
 tasks-backend/
+├── db/
+│   └── schema.sql          # Database schema
+├── postman/
+│   └── ...                 # Postman collection
+├── prisma/
+│   ├── migrations/         # Database migrations
+│   └── schema.prisma       # Prisma schema
 ├── src/
 │   ├── app.ts              # Express app configuration
 │   ├── server.ts           # Server entry point
-│   ├── middleware/
-│   │   └── auth.ts         # Authentication middleware
-│   ├── routes/
-│   │   └── tasks.ts        # Task routes
 │   ├── controllers/
 │   │   └── tasks.controller.ts # Task controllers
-│   ├── services/
-│   │   └── tasks.service.ts    # Task services
+│   ├── generated/          # Generated types (Prisma)
+│   ├── middleware/
+│   │   └── auth.ts         # Authentication middleware
 │   ├── models/
-│   │   ├── tasks.ts        # Task model
-│   │   └── enums.ts        # Enums
+│   │   ├── enums.ts        # Enums
+│   │   └── tasks.model.ts  # Task model
+│   ├── routes/
+│   │   └── tasks.route.ts  # Task routes
+│   ├── services/
+│   │   ├── tasks.prisma.service.ts # Task services (Prisma)
+│   │   └── tasks.service.ts    # Task services (Native pg)
 │   ├── utils/
-│   │   └── db.ts           # Database utilities
+│   │   ├── db.ts           # Database utilities (pg)
+│   │   └── prisma.ts       # Prisma client instance
 │   └── __tests__/          # Test files
-├── db/
-│   └── schema.sql          # Database schema
 ├── Dockerfile              # Docker image definition
 ├── docker-compose.yml      # Docker Compose configuration
-└── package.json
+├── package.json
+└── tsconfig.json
 ```
 
 ## Database & ORM
