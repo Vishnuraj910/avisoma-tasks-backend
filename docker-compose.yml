@@ -32,7 +32,7 @@ services:
       PORT: ${PORT:-3000}
       DB_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-avisoma_db}
       # API key required by auth middleware
-      API_KEY: ${API_KEY:-c4f8a9e2-7b3d-4e6a-9f1c-8d2e5b6a1f0d}
+      API_KEY: ${API_KEY:-your-api-key-here}
     ports:
       - "${PORT:-3000}:3000"
     depends_on:
