@@ -58,6 +58,18 @@ npm run dev
 bun dev
 ```
 
+### Building for Production
+
+1. Build the project:
+```bash
+npm run build
+```
+
+2. Start the production server:
+```bash
+npm start
+```
+
 ## Docker Deployment
 
 ### Using Docker Compose (Recommended)
@@ -145,9 +157,9 @@ Authorization: your-api-key
 - `POST /api/tasks` - Create a new task
   - Body: `{ "title": "string", "description": "string" (optional) }`
   - Requires: API key in Authorization header
-- `GET /api/tasks` - Get all tasks
+- `GET /api/tasks` - Get all tasks (excludes soft-deleted tasks)
   - Requires: API key in Authorization header
-- `GET /api/tasks/:id` - Get a single task
+- `GET /api/tasks/:id` - Get a single task (returns 404 if soft-deleted)
   - Requires: API key in Authorization header
 - `PATCH /api/tasks/:id` - Update task status
   - Body: `{ "status": "pending" | "in-progress" | "completed" }`
@@ -196,6 +208,10 @@ tasks-backend/
 │   │   └── auth.ts         # Authentication middleware
 │   ├── routes/
 │   │   └── tasks.ts        # Task routes
+│   ├── controllers/
+│   │   └── tasks.controller.ts # Task controllers
+│   ├── services/
+│   │   └── tasks.service.ts    # Task services
 │   ├── models/
 │   │   ├── tasks.ts        # Task model
 │   │   └── enums.ts        # Enums
